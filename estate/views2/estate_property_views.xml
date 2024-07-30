@@ -4,18 +4,8 @@
         <field name="name">estate</field>
         <field name="res_model">estate.property</field>
         <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Define a new lost reason
-            </p>
-            <p>
-                Use lost reasons to explain why an opportunity is lost.
-            </p>
-            <p>
-                Some examples of lost reasons: "We don't have people/skill", "Price too high"
-            </p>
-        </field>
     </record>
+
 
     <record id="estate_property_view_tree" model="ir.ui.view">
         <field name="name">estate_property_tree</field>
@@ -23,12 +13,14 @@
         <field name="arch" type="xml">
             <tree string="Tmp">
                 <field name="name"/>
+                <field name="property_type_id"/>
                 <field name="postcode"/>
                 <field name="bedrooms"/>
                 <field name="living_area"/>
                 <field name="expected_price"/>
                 <field name="selling_price"/>
                 <field name="date_availability"/>
+
             </tree>
         </field>
     </record>
@@ -43,6 +35,9 @@
                         <h1>
                             <field name="name"/>
                         </h1>
+                        <h4>
+                            <field name="tags_ids" widget="many2many_tags"/>
+                        </h4>
                     </div>
                     <group>
                         <group>
@@ -57,6 +52,7 @@
                     <notebook>
                         <page string="Description">
                             <group>
+                                <field name="property_type_id"/>
                                 <field name="living_area"/>
                                 <field name="facades"/>
                                 <field name="garage"/>
@@ -66,6 +62,19 @@
                                 <field name="state"/>
                             </group>
                         </page>
+                        <page string="Other Info">
+                            <group>
+                                <field name="buyer_id"/>
+                                <field name="sales_person_id"/>
+                            </group>
+                        </page>
+                        <page string="Offers">
+                            <group>
+                                <field name="offer_ids"/>
+
+                            </group>
+                        </page>
+
                     </notebook>
                 </sheet>
             </form>
@@ -78,6 +87,7 @@
         <field name="arch" type="xml">
             <search string="Tests">
                 <field name="name"/>
+                <field name="property_type_id"/>
                 <field name="postcode"/>
                 <field name="expected_price"/>
                 <field name="bedrooms"/>
