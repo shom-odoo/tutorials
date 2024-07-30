@@ -5,28 +5,30 @@
         <field name="res_model">estate.property</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            Define a new lost reason
-          </p><p>
-            Use lost reasons to explain why an opportunity is lost.
-          </p><p>
-            Some examples of lost reasons: "We don't have people/skill", "Price too high"
-          </p>
+            <p class="o_view_nocontent_smiling_face">
+                Define a new lost reason
+            </p>
+            <p>
+                Use lost reasons to explain why an opportunity is lost.
+            </p>
+            <p>
+                Some examples of lost reasons: "We don't have people/skill", "Price too high"
+            </p>
         </field>
     </record>
 
-        <record id="estate_property_view_tree" model="ir.ui.view">
+    <record id="estate_property_view_tree" model="ir.ui.view">
         <field name="name">estate_property_tree</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <tree string="Tmp">
                 <field name="name"/>
                 <field name="postcode"/>
-                 <field name="bedrooms"/>
-                 <field name="living_area"/>
-                 <field name="expected_price"/>
-                 <field name="selling_price"/>
-                 <field name="date_availability"/>
+                <field name="bedrooms"/>
+                <field name="living_area"/>
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="date_availability"/>
             </tree>
         </field>
     </record>
@@ -35,37 +37,59 @@
         <field name="name">estate_property_form</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-        <form string="Form">
-    <sheet>
-        <div>
-            <h1>
+            <form string="Form">
+                <sheet>
+                    <div>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="postcode"/>
+                            <field name="date_availability"/>
+                        </group>
+                        <group>
+                            <field name="expected_price"/>
+                            <field name="selling_price"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <group>
+                                <field name="living_area"/>
+                                <field name="facades"/>
+                                <field name="garage"/>
+                                <field name="garden"/>
+                                <field name="garden_area"/>
+                                <field name="garden_orientation"/>
+                                <field name="state"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="estate_property_search" model="ir.ui.view">
+        <field name="name">estate_property_search</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search string="Tests">
                 <field name="name"/>
-            </h1>
-        </div>
-        <group>
-            <group>
                 <field name="postcode"/>
-                <field name="date_availability"/>
-            </group>
-            <group>
                 <field name="expected_price"/>
-                <field name="selling_price"/>
-            </group>
-        </group>
-        <notebook>
-            <page string="Description">
-                <group>
+                <field name="bedrooms"/>
                 <field name="living_area"/>
                 <field name="facades"/>
-                <field name="garage"/>
-                <field name="garden"/>
-                <field name="garden_area"/>
-                <field name="garden_orientation"/>
-                </group>
-            </page>
-        </notebook>
-    </sheet>
-</form>
+                <filter string="DateAvailable" name="estate_property_available"
+                        domain="[('date_availability', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Available" name="estate_property_available2"
+                        domain="[('state', 'in', ['new','offer_received'])]"/>
+                <filter string="Post Code" name="estate_property_post_cpde_grouping"
+                        context="{'group_by': 'postcode'}"/>
+            </search>
         </field>
     </record>
 </odoo>
