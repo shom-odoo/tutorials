@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
 
-        <record id="estate_property_offers_view_tree" model="ir.ui.view">
+    <record id="estate_property_offers_view_tree" model="ir.ui.view">
         <field name="name">estate_property_offer_tree</field>
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
@@ -10,6 +10,9 @@
                 <field name="property_id"/>
                 <field name="status"/>
                 <field name="price"/>
+                <field name="validity"/>
+                <field name="date_deadline"/>
+                <field name="create_date" string="Created Date"/>
             </tree>
         </field>
     </record>
