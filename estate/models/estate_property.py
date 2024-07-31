@@ -1,7 +1,7 @@
 import datetime
 from odoo import api,fields, models
-from odoo.exceptions import UserError
-
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import float_compare
 class estate_property(models.Model):
     _name = "estate.property"
     _description = "properties of an estate object"
@@ -39,6 +39,13 @@ class estate_property(models.Model):
     offer_ids = fields.One2many(comodel_name='estate.property.offer', inverse_name='property_id', string='Offers')
     total_area = fields.Float(string="Total area", compute="_compute_total")
     best_price = fields.Float(string="Best Offer", compute="_compute_best_price")
+
+    _sql_constraints = [
+
+        ('expected_price_pos', 'CHECK(expected_price > 0)', 'Expected price should be positive'),
+        ('selling_price_pos', 'CHECK(selling_price > 0)', 'Selling price should be positive'),
+    ]
+
     @api.depends("living_area", "garden_area")
     def _compute_total(self):
         for record in self:
@@ -75,3 +82,10 @@ class estate_property(models.Model):
                 raise UserError("Can't cancel a sold property")
             record.state = 'canceled'
             return True
+
+    @api.constrains('selling_price','expected_price')
+    def selling_price_constraints(self):
+        for record in self:
+            x = float_compare(100 * record.selling_price , 90 * record.expected_price, precision_digits=5)
+            if x == -1:
+                raise ValidationError("Selling price cannot be this low maaan, please respect")
