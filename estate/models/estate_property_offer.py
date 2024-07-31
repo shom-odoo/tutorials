@@ -25,3 +25,13 @@ class estate_property_offer(models.Model):
         for record in self:
             if record.date_deadline:
                 record.validity = (record.date_deadline - datetime.today().date()).days
+
+
+    def action_confirm(self):
+        for record in self:
+            record.property_id.buyer_id = record.partner_id
+            record.property_id.selling_price = record.price
+
+    def action_cancel(self):
+        return True
+

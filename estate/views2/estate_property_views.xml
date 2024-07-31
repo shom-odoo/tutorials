@@ -30,6 +30,12 @@
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <form string="Form">
+                <header>
+                    <header>
+                        <button name="sold_action" type="object" string="SOLD"/>
+                        <button name="cancel_action" type="object" string="CANCEL"/>
+                    </header>
+                </header>
                 <sheet>
                     <div>
                         <h1>
