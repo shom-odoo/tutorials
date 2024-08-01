@@ -4,6 +4,7 @@
         <field name="name">estate</field>
         <field name="res_model">estate.property</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_estate_property_available': True}</field>
     </record>
 
 
@@ -11,15 +12,17 @@
         <field name="name">estate_property_tree</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <tree string="Tmp">
+            <tree string="Tmp" decoration-success="state in ['offer_received','offer_accepted']" decoration-bf="state == 'offer_accepted'" decoration-muted="state =='sold'">
                 <field name="name"/>
+                <field name="state"/>
                 <field name="property_type_id"/>
                 <field name="postcode"/>
+                <field name="tags_ids"/>
                 <field name="bedrooms"/>
                 <field name="living_area"/>
                 <field name="expected_price"/>
                 <field name="selling_price"/>
-                <field name="date_availability"/>
+                <field name="date_availability" optional="hide"/>
                 <field name="best_price"/>
             </tree>
         </field>
@@ -32,9 +35,11 @@
             <form string="Form">
                 <header>
                     <header>
-                        <button name="sold_action" type="object" string="SOLD"/>
-                        <button name="cancel_action" type="object" string="CANCEL"/>
+                        <button name="sold_action" type="object" string="SOLD" invisible="state in ['canceled', 'sold']"/>
+                        <button name="cancel_action" type="object" string="CANCEL" invisible="state in ['canceled', 'sold']"/>
+
                     </header>
+                    <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <div>
@@ -42,11 +47,12 @@
                             <field name="name"/>
                         </h1>
                         <h4>
-                            <field name="tags_ids" widget="many2many_tags"/>
+                            <field name="tags_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
                         </h4>
                     </div>
                     <group>
                         <group>
+                            <field name="property_type_id" options="{'no_create': true}"/>
                             <field name="postcode"/>
                             <field name="date_availability"/>
                         </group>
@@ -59,14 +65,14 @@
                     <notebook>
                         <page string="Description">
                             <group>
-                                <field name="property_type_id"/>
+
                                 <field name="living_area"/>
                                 <field name="facades"/>
                                 <field name="garage"/>
                                 <field name="garden"/>
-                                <field name="garden_area"/>
-                                <field name="garden_orientation"/>
-                                <field name="state"/>
+                                <field name="garden_area" invisible="not garden"/>
+                                <field name="garden_orientation" invisible="not garden"/>
+
                                 <field name="total_area"/>
 
                             </group>
@@ -79,7 +85,7 @@
                         </page>
                         <page string="Offers">
                             <group>
-                                <field name="offer_ids"/>
+                                <field name="offer_ids" readonly="state in ['offer_accepted', 'sold', 'canceled']"/>
 
                             </group>
                         </page>
@@ -102,9 +108,9 @@
                 <field name="bedrooms"/>
                 <field name="living_area"/>
                 <field name="facades"/>
-                <filter string="DateAvailable" name="estate_property_available"
+                <filter string="DateAvailable" name="estate_property_date_available"
                         domain="[('date_availability', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Available" name="estate_property_available2"
+                <filter string="Available" name="estate_property_available"
                         domain="[('state', 'in', ['new','offer_received'])]"/>
                 <filter string="Post Code" name="estate_property_post_cpde_grouping"
                         context="{'group_by': 'postcode'}"/>

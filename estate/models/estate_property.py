@@ -1,13 +1,15 @@
 import datetime
-from odoo import api,fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_compare
+
+
 class estate_property(models.Model):
     _name = "estate.property"
     _description = "properties of an estate object"
+    _order = "id desc"
 
     name = fields.Char('Title', required=True)
-    property_type = fields.Char('Property Type', default="")
     postcode = fields.Char('Post Code')
     date_availability = fields.Date('Date Availability', copy=False,
                                     default=datetime.date.today() + datetime.timedelta(weeks=12))
@@ -58,34 +60,41 @@ class estate_property(models.Model):
             for offer in record.offer_ids:
                 mx = max(offer.price, mx)
 
-        self.best_price = mx
+            record.best_price = mx
+
 
     @api.onchange("garden")
     def _onchange_garden(self):
         if self.garden:
             self.garden_orientation = 'North'
-            self.garden_area =10
+            self.garden_area = 10
         else:
             self.garden_orientation = False
             self.garden_area = False
 
+    @api.onchange("offer_ids")
+    def _onchange_offer_ids(self):
+        if self.state == "new":
+            if len(self.offer_ids):
+                self.state = "offer_received"
     def sold_action(self):
         for record in self:
             if record.state == 'canceled':
                 raise UserError("Can't sell a canceled property")
             record.state = 'sold'
-            return True
+        return True
 
     def cancel_action(self):
         for record in self:
+            print(record.state)
             if record.state == 'sold':
                 raise UserError("Can't cancel a sold property")
             record.state = 'canceled'
-            return True
+        return True
 
-    @api.constrains('selling_price','expected_price')
+    @api.constrains('selling_price', 'expected_price')
     def selling_price_constraints(self):
         for record in self:
-            x = float_compare(100 * record.selling_price , 90 * record.expected_price, precision_digits=5)
+            x = float_compare(100 * record.selling_price, 90 * record.expected_price, precision_digits=5)
             if x == -1:
                 raise ValidationError("Selling price cannot be this low maaan, please respect")

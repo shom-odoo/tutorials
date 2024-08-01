@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 class estate_property_offer(models.Model):
     _name = 'estate.property.offer'
     _description = 'estate_property_offer'
+    _order = 'price desc'
 
     price = fields.Float(string='Price')
     status = fields.Selection(string='Status', copy=False, selection=[('accepted', 'Accepted'), ('refused', 'Refused')])
@@ -29,12 +30,16 @@ class estate_property_offer(models.Model):
             if record.date_deadline:
                 record.validity = (record.date_deadline - datetime.today().date()).days
 
-
     def action_confirm(self):
         for record in self:
             record.property_id.buyer_id = record.partner_id
             record.property_id.selling_price = record.price
+            record.status = 'accepted'
+            record.property_id.state = 'offer_accepted'
+        return True
 
     def action_cancel(self):
+        for record in self:
+            record.status = 'refused'
         return True
 
