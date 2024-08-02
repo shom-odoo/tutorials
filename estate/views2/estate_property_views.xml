@@ -4,6 +4,7 @@
         <field name="name">estate</field>
         <field name="res_model">estate.property</field>
         <field name="view_mode">tree,form</field>
+<!--        this context for adding the default filters `search_default_{filter_name}`-->
         <field name="context">{'search_default_estate_property_available': True}</field>
     </record>
 

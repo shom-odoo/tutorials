@@ -9,13 +9,13 @@ class estate_property_types(models.Model):
     name = fields.Char('Name', required=True)
     property_ids = fields.One2many(comodel_name='estate.property', inverse_name='property_type_id')
     sequence = fields.Integer('Sequence', default=1, help="Used to order stages. Lower is better.")
-    # offer_ids = fields.One2many(comodel_name='property_ids.offer_ids', inverse_name='property_ids.offer_ids.property_type_id')
-    # offer_count = fields.Integer(string='Offers count',compute='_compute_offer_count')
+    offer_ids = fields.One2many(comodel_name='estate.property.offer', inverse_name='property_type_id')
+    offer_count = fields.Integer(string='Offers count',compute='_compute_offer_count')
     _sql_constraints = [
         ('property_type_name_unique', 'unique(name)', 'property type should be unique')
     ]
 
-    # @api.depends('offer_ids')
-    # def _compute_offer_count(self):
-    #     for record in self:
-    #         record.offer_count = len(record.offer_ids)
+    @api.depends('offer_ids')
+    def _compute_offer_count(self):
+        for record in self:
+            record.offer_count = len(record.offer_ids)

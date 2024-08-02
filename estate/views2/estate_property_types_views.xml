@@ -13,6 +13,7 @@
             <tree string="PropertyTypes">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="offer_count"/>
             </tree>
         </field>
     </record>
@@ -23,12 +24,16 @@
         <field name="model">estate.property.types</field>
         <field name="arch" type="xml">
             <form string="Form2">
+
                 <sheet>
+
                     <div>
                         <h1>
                             <field name="name"/>
                         </h1>
                     </div>
+                    <button type="action" name="%(estate_property_offer_action)d" string="Offers"/>
+
                     <div>
                         <notebook>
                             <page string="Properties">
@@ -37,7 +42,7 @@
                                         <field name="name"/>
                                         <field name="expected_price"/>
                                         <field name="state"/>
-<!--                                        <field name="offer_count"/>-->
+
                                     </tree>
                                 </field>
                             </page>
