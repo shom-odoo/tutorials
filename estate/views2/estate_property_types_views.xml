@@ -37,6 +37,7 @@
                                         <field name="name"/>
                                         <field name="expected_price"/>
                                         <field name="state"/>
+<!--                                        <field name="offer_count"/>-->
                                     </tree>
                                 </field>
                             </page>
