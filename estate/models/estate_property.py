@@ -72,11 +72,6 @@ class estate_property(models.Model):
             self.garden_orientation = False
             self.garden_area = False
 
-    @api.onchange("offer_ids")
-    def _onchange_offer_ids(self):
-        if self.state == "new":
-            if len(self.offer_ids):
-                self.state = "offer_received"
     def sold_action(self):
         for record in self:
             if record.state == 'canceled':
@@ -98,3 +93,10 @@ class estate_property(models.Model):
             x = float_compare(100 * record.selling_price, 90 * record.expected_price, precision_digits=5)
             if x == -1:
                 raise ValidationError("Selling price cannot be this low maaan, please respect")
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_state(self):
+        if any(record.state not in ['new', 'canceled'] for record in self):
+            raise UserError("Maysa7esh yasta, Laszem El state tob2a New or Canceled")
+
+

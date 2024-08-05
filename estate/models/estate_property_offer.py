@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from datetime import datetime, timedelta
+from odoo.exceptions import UserError
 
 
 class estate_property_offer(models.Model):
@@ -45,3 +46,11 @@ class estate_property_offer(models.Model):
             record.status = 'refused'
         return True
 
+    @api.model
+    def create(self, vals):
+        property = self.env['estate.property'].browse(vals['property_id'])
+        property.state = 'offer_received'
+        for offer in property.offer_ids:
+            if offer.price > vals['price']:
+                raise UserError("Dekhelak me3lem la t2awesny, Give me best offer")
+        return super().create(vals)

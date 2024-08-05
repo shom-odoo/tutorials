@@ -68,7 +68,7 @@
                             <group>
 
                                 <field name="living_area"/>
-                                <field name="facades"/>
+                                <field name="facades" invisible="garage"/>
                                 <field name="garage"/>
                                 <field name="garden"/>
                                 <field name="garden_area" invisible="not garden"/>
