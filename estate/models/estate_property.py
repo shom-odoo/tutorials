@@ -6,6 +6,7 @@ from odoo.tools.float_utils import float_compare
 
 class estate_property(models.Model):
     _name = "estate.property"
+    _inherit = "mail.thread"
     _description = "properties of an estate object"
     _order = "id desc"
 

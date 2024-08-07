@@ -1,6 +1,6 @@
 {
 'name': 'estate',
-'depends' : ['base'],
+'depends' : ['base','mail'],
 'data':['security/ir.model.access.csv',
         'views2/estate_property_views.xml',
         'views2/estate_property_types_views.xml',
