@@ -3,17 +3,17 @@
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">estate</field>
         <field name="res_model">estate.property</field>
-        <field name="view_mode">tree,form</field>
-<!--        this context for adding the default filters `search_default_{filter_name}`-->
+        <field name="view_mode">tree,form,kanban</field>
+        <!--        this context for adding the default filters `search_default_{filter_name}`-->
         <field name="context">{'search_default_estate_property_available': True}</field>
     </record>
-
 
     <record id="estate_property_view_tree" model="ir.ui.view">
         <field name="name">estate_property_tree</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <tree string="Tmp" decoration-success="state in ['offer_received','offer_accepted']" decoration-bf="state == 'offer_accepted'" decoration-muted="state =='sold'">
+            <tree string="Tmp" decoration-success="state in ['offer_received','offer_accepted']"
+                  decoration-bf="state == 'offer_accepted'" decoration-muted="state =='sold'">
                 <field name="name"/>
                 <field name="state"/>
                 <field name="property_type_id"/>
@@ -29,6 +29,56 @@
         </field>
     </record>
 
+    <record id="estate_property_view_kanban" model="ir.ui.view">
+        <field name="name">estate_property_kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+
+            <kanban default_group_by="property_type_id">
+                <field name="state"/>
+
+
+                <templates>
+
+                    <t t-name="kanban-box">
+
+                        <div class="oe_kanban_global_click">
+
+                            <strong>
+                                <field name="name"/>
+                            </strong>
+
+                            <div>
+                                <span>Expected Price: </span>
+                                <span>
+                                    <field name="expected_price"/>
+                                </span>
+                            </div>
+
+                            <div t-if="record.state.raw_value == 'offer_received'">
+                                <span>Best Price: </span>
+                                <span>
+                                    <field name="best_price"/>
+                                </span>
+                            </div>
+                            <div t-if="record.state.raw_value == 'offer_accepted'">
+                                <span>Selling Price: </span>
+                                <span>
+                                    <field name="selling_price"/>
+                                </span>
+                            </div>
+                            <div>
+                                <field name="tags_ids" options="{'color_field': 'color'}"/>
+                            </div>
+
+                        </div>
+                    </t>
+
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="estate_property_view_form" model="ir.ui.view">
         <field name="name">estate_property_form</field>
         <field name="model">estate.property</field>
@@ -36,9 +86,10 @@
             <form string="Form">
                 <header>
                     <header>
-                        <button name="sold_action" type="object" string="SOLD" invisible="state in ['canceled', 'sold']"/>
-                        <button name="cancel_action" type="object" string="CANCEL" invisible="state in ['canceled', 'sold']"/>
-
+                        <button name="sold_action" type="object" string="SOLD"
+                                invisible="state in ['canceled', 'sold']"/>
+                        <button name="cancel_action" type="object" string="CANCEL"
+                                invisible="state in ['canceled', 'sold']"/>
                     </header>
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -48,7 +99,7 @@
                             <field name="name"/>
                         </h1>
                         <h4>
-                            <field name="tags_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
+                            <field name="tags_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </h4>
                     </div>
                     <group>

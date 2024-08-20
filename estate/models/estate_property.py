@@ -41,7 +41,7 @@ class estate_property(models.Model):
     offer_ids = fields.One2many(comodel_name='estate.property.offer', inverse_name='property_id', string='Offers')
     total_area = fields.Float(string="Total area", compute="_compute_total")
     best_price = fields.Float(string="Best Offer", compute="_compute_best_price")
-
+    sequence = fields.Integer('Sequence', default=1, help="Used to order stages. Lower is better.")
     _sql_constraints = [
 
         ('expected_price_pos', 'CHECK(expected_price > 0)', 'Expected price should be positive'),
